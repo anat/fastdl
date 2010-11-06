@@ -86,7 +86,6 @@ namespace FastDL.DL
 
 
             _stream = response.GetResponseStream();
-            Stream.Synchronized(_stream);
             _stream.BeginRead(_buffer, 0, READ_SIZE, callB, dbc);
 
             while (_eos == false)
@@ -117,21 +116,13 @@ namespace FastDL.DL
             }
             else
             {
-                //tp.SetMaxThreads()
-                //MsgBox(current.current_byte)
                 lock (fileLock)
                 {
                     fs.Seek(current.current_byte, SeekOrigin.Begin);
-                    fs.Lock(current.current_byte, read);
                     fs.Write(_buffer, 0, read);
-                    fs.Unlock(current.current_byte, read);
                 }
                 current.current_byte += read;
-                _bgw.ReportProgress(0, new object[] {
-				read,
-				current,
-				_dbd
-			});
+                _bgw.ReportProgress(0, new object[] {read, current, _dbd});
                 _stream.BeginRead(_buffer, 0, READ_SIZE, callB, current);
             }
         }

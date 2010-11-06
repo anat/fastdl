@@ -23,10 +23,7 @@ namespace FastDL.DL
 
     public class URLManager
     {
-        private string _baseurl;
         static IPAddress _ip;
-
-        private Socket _socket;
         public static string getURL(FastDL.DB.DBDownload dbd, IPAddress ip)
         {
             _ip = ip;
