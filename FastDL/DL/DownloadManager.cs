@@ -81,7 +81,6 @@ namespace FastDL.DL
                 addAndProcessChunk(dbd);
 
                 int thread = 0;
-                FastDL.DB.DBDownload tmp = default(FastDL.DB.DBDownload);
 
                 foreach (IPAddress ip in _ips)
                 {
@@ -90,7 +89,6 @@ namespace FastDL.DL
 
                     for (int i = 1; i <= _nbConnPerInterface; i++)
                     {
-                        //MsgBox("BOUZIN" & dbd.url)
                         bgw = new BackgroundWorker();
                         bgw.WorkerReportsProgress = true;
                         bgw.WorkerSupportsCancellation = true;
@@ -100,11 +98,7 @@ namespace FastDL.DL
                         bgw.ProgressChanged += _form.maj2;
 
                         dlers.Add(bgw);
-                        bgw.RunWorkerAsync(new object[] {
-						_adapters[_ips.IndexOf(ip)],
-						ip,
-						dbd
-					});
+                        bgw.RunWorkerAsync(new object[] {_adapters[_ips.IndexOf(ip)], ip, dbd});
                         System.Threading.Thread.Sleep(500);
                         thread += 1;
                     }
@@ -112,8 +106,6 @@ namespace FastDL.DL
                 timer = new Stopwatch();
                 timer.Start();
                 MessageBox.Show("Started " + thread + " threads !");
-
-
             }
 
         }
