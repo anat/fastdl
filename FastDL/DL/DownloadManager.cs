@@ -23,17 +23,20 @@ namespace FastDL.DL
     public class DownloadManager
     {
         public FastDL.DB.DBManager dbm;
-        private FastDL.MISC.Header header;
+       
         private BackgroundWorker bgw = new BackgroundWorker();
         private List<BackgroundWorker> dlers = new List<BackgroundWorker>();
         private mainForm _form;
         private List<IPAddress> _ips;
         private List<System.Net.NetworkInformation.NetworkInterface> _adapters;
         private long _blockSize;
-        //public DataManager _dm;
+        private FastDL.Data.DataManager _dm;
         private int _nbConnPerInterface;
         public Stopwatch timer;
-        public DownloadManager(string url, mainForm form, List<System.Net.NetworkInformation.NetworkInterface> adapters, List<IPAddress> IPs, int BlockSize, int nbConnPerInterface)
+        private DownloadInformationWorker _diw;
+
+
+        public DownloadManager(mainForm form, List<System.Net.NetworkInformation.NetworkInterface> adapters, List<IPAddress> IPs, int BlockSize, int nbConnPerInterface)
         {
             _blockSize = BlockSize * 1048576;
             _nbConnPerInterface = nbConnPerInterface;
@@ -41,14 +44,12 @@ namespace FastDL.DL
             _ips = IPs;
             _adapters = adapters;
             dbm = new FastDL.DB.DBManager();
-            header = new FastDL.MISC.Header();
-            addDownload(url);
+
         }
 
 
         public void addDownload(string url)
         {
-            BackgroundWorker bgw = null;
 
             if (dbm.exists(url))
             {
@@ -56,66 +57,55 @@ namespace FastDL.DL
             }
             else
             {
-                //Création du DBDownload
-
-                FastDL.DB.DBDownload dbd = new FastDL.DB.DBDownload();
-                dbd.url = url;
-                dbd.url = URLManager.getURL(dbd, _ips[0]);
-                header.setHeader(dbd.url);
-                dbd.name = dbd.url.Substring(dbd.url.LastIndexOf("/") + 1);
-                dbd.url = dbd.url;
-                dbd.path = Application.StartupPath;
-                dbd.startDate = DateAndTime.Now;
-                dbd.header = "rien";
-                dbd.size = header.size;
-
-                //Création du stream/fichier
-                Downloader.fs = new FileStream(dbd.path + "\\" + dbd.name, FileMode.Create);
-                Stream.Synchronized(Downloader.fs);
-
-                //Ajout du download à la BDD
-                dbd.url = url;
-                dbm.addDownload(ref dbd);
-
-                //Ajout des chunks à la BDD
-                addAndProcessChunk(dbd);
-
-                int thread = 0;
-
-                foreach (IPAddress ip in _ips)
-                {
-                    dbd.url = url;
-                    dbd.url = URLManager.getURL(dbd, ip);
-
-                    for (int i = 1; i <= _nbConnPerInterface; i++)
-                    {
-                        bgw = new BackgroundWorker();
-                        bgw.WorkerReportsProgress = true;
-                        bgw.WorkerSupportsCancellation = true;
-
-                        bgw.DoWork += DoDownload;
-                        bgw.RunWorkerCompleted += EndDownload;
-                        bgw.ProgressChanged += _form.maj2;
-
-                        dlers.Add(bgw);
-                        bgw.RunWorkerAsync(new object[] {_adapters[_ips.IndexOf(ip)], ip, dbd});
-                        System.Threading.Thread.Sleep(500);
-                        thread += 1;
-                    }
-                }
-                timer = new Stopwatch();
-                timer.Start();
-                MessageBox.Show("Started " + thread + " threads !");
+                // Création du DBDownload (asynchrone)
+                _diw = new DownloadInformationWorker(url, _ips, this);
+                // La méthode startDownload est ensuite appelée automatiquement
             }
 
         }
+
+        public void startDownload(object sender, RunWorkerCompletedEventArgs e)
+        {
+            Hashtable ht = (Hashtable)(((object[])(e.Result))[0]);
+            DB.DBDownload dbd = (DB.DBDownload)(((object[])(e.Result))[1]);
+            //string url, DB.DBDownload dbd)
+            
+            //Création du stream/fichier
+            _dm = new FastDL.Data.DataManager(dbd.path + "\\" + dbd.name);
+
+            int thread = 0;
+            foreach (IPAddress ip in _ips)
+            {
+                dbd.url = (string)ht[ip.ToString()];
+                for (int i = 1; i <= _nbConnPerInterface; i++)
+                {
+                    bgw = new BackgroundWorker();
+                    bgw.WorkerReportsProgress = true;
+                    bgw.WorkerSupportsCancellation = true;
+
+                    bgw.DoWork += DoDownload;
+                    bgw.RunWorkerCompleted += EndDownload;
+                    bgw.ProgressChanged += _form.maj2;
+
+                    dlers.Add(bgw);
+                    bgw.RunWorkerAsync(new object[] { _adapters[_ips.IndexOf(ip)], ip, dbd });
+                    System.Threading.Thread.Sleep(500);
+                    thread += 1;
+                }
+            }
+            timer = new Stopwatch();
+            timer.Start();
+            MessageBox.Show("Started " + thread + " threads !");
+        }
+
 
         public void DoDownload(object sender, DoWorkEventArgs e)
         {
             System.Net.NetworkInformation.NetworkInterface adapter = (NetworkInterface)(((object[])(e.Argument))[0]);
             IPAddress ip = (IPAddress)(((object[])(e.Argument))[1]);
             FastDL.DB.DBDownload dbd = (FastDL.DB.DBDownload)(((object[])(e.Argument))[2]);
-            Downloader dl = new FastDL.DL.Downloader((BackgroundWorker)sender, adapter, ip, dbd, _form);
+            Downloader dl = new FastDL.DL.Downloader((BackgroundWorker)sender, adapter, ip, dbd, _dm);
+            e.Result = dbd;
         }
 
         public void EndDownload(object sender, RunWorkerCompletedEventArgs e)
@@ -124,7 +114,8 @@ namespace FastDL.DL
             dlers.Remove(bgw);
             if (dlers.Count() == 0)
             {
-                Downloader.fs.Close();
+                dbm.endDownload(((DB.DBDownload)(e.Result)).id);
+                _dm.close();
                 MessageBox.Show("Téléchargé en " + timer.Elapsed.Seconds + " secondes.");
             }
 

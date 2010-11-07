@@ -23,16 +23,37 @@ namespace FastDL
         private FastDL.DL.DownloadManager dlm;
         List<FastDL.DB.DBChunk> coord = new List<FastDL.DB.DBChunk>();
         private FastDL.MISC.AdapterManager ad = new FastDL.MISC.AdapterManager();
-
+        //public DataGridView dgvThread;
         public mainForm()
         {
             InitializeComponent();
             //rtbURL.Text = "http://www.megaupload.com/?d=Y182D810";
-            //rtbURL.Text = "http://ovh.dl.sourceforge.net/project/vlc/1.1.4/win32/vlc-1.1.4-win32.exe";
+            rtbURL.Text = "http://ovh.dl.sourceforge.net/project/vlc/1.1.4/win32/vlc-1.1.4-win32.exe";
         }
 
         private void mainForm_Load(object sender, EventArgs e)
         {
+            //dgvThread = new DataGridView();
+            //this.dgvThread.AllowUserToAddRows = false;
+            //this.dgvThread.AllowUserToDeleteRows = false;
+            //this.dgvThread.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            //this.dgvThread.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            //this.nthread,
+            //this.bytesdownloaded,
+            //this.percentblock,
+            //this.part});
+            //this.dgvThread.Location = new System.Drawing.Point(261, 137);
+            //this.dgvThread.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            //this.dgvThread.Name = "dgvThread";
+            //this.dgvThread.ReadOnly = true;
+            //this.dgvThread.RowHeadersVisible = false;
+            //this.dgvThread.Size = new System.Drawing.Size(425, 172);
+            //this.dgvThread.TabIndex = 2;
+            //TabPage tp1test = new TabPage("Download");
+            //tp1test.Size = tcMain.Size;
+            //tp1test.ImageIndex = 1;
+            //tcMain.Controls.Add(tp1test);
+
             ServicePointManager.DefaultConnectionLimit = 100;
             pbProgressBlock.Image = filemap.stats;
             ad.setIPUp();
@@ -52,7 +73,7 @@ namespace FastDL
             BackgroundWorker bgw = (BackgroundWorker)sender;
             bool exists = false;
 
-
+            
 
             foreach (DataGridViewRow row in dgvThread.Rows)
             {
@@ -91,8 +112,8 @@ namespace FastDL
                     long total = dbd.size;
 
 
-                    //string leftMinutes = Math.Round(((Convert.ToInt64(fromStart) * Convert.ToInt64(total)) / current) / 60).ToString();
-                    lblSpeed.Text = Math.Round((decimal)(DownloadedInASecond / 1024 / 1024), 1).ToString() + " Mo/sec  Restant : ";// +leftMinutes;
+                    string leftMinutes = Math.Round((decimal)(((Convert.ToInt64(fromStart) * Convert.ToInt64(total)) / current) / 60)).ToString();
+                    lblSpeed.Text = Math.Round((decimal)(DownloadedInASecond / 1024), 1).ToString() + " Ko/sec  Restant : " + leftMinutes;
                     DownloadedInASecond = 0;
                     sw = new Stopwatch();
                     sw.Start();
@@ -117,11 +138,13 @@ namespace FastDL
             coord = new List<FastDL.DB.DBChunk>();
             pbProgressBlock.Image = filemap.stats;
             //DataGridView2.Rows(0).Cells("Speed").Value = recv.NetworkInterface.GetIPv4Statistics.BytesReceived
+            lblDlState.Text = (totalReceived / 1024 / 1024).ToString() + "/" + (dbc.dbd.size / 1024 / 1024).ToString();
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-              dlm = new FastDL.DL.DownloadManager(rtbURL.Text, this, ad.InternetIntefaces, ad.InternetAddresses,(int)nudBlockSize.Value,(int)nudConnPerInterfaces.Value);
+              dlm = new FastDL.DL.DownloadManager(this, ad.InternetIntefaces, ad.InternetAddresses,(int)nudBlockSize.Value,(int)nudConnPerInterfaces.Value);
+              dlm.addDownload(rtbURL.Text);
         }
 
         private void button2_Click(object sender, EventArgs e)
