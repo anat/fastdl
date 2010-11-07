@@ -20,12 +20,11 @@ namespace FastDL.DL
 
     public class Downloader
     {
+        //Ce FileStream est le mal il nous faut un DataManager
         public static FileStream fs;
         private const int BUFFER_SIZE = 400000;
         private const int READ_SIZE = 350000;
         private byte[] _buffer;
-        //public delegate void received(object sender, DataDownloadEvent e);
-        public mainForm _form;
         private FastDL.DB.DBManager _dbm = new FastDL.DB.DBManager();
         private Stream _stream;
         private bool _eos;
@@ -33,13 +32,14 @@ namespace FastDL.DL
         private FastDL.DB.DBDownload _dbd;
         public BackgroundWorker _bgw;
         public bool Downloaded;
-
+        private FastDL.Data.DataManager _dm;
         static object fileLock = new object();
-        public Downloader(BackgroundWorker bgw, System.Net.NetworkInformation.NetworkInterface adapter, IPAddress localIP, FastDL.DB.DBDownload dbd, mainForm f)
+
+        public Downloader(BackgroundWorker bgw, System.Net.NetworkInformation.NetworkInterface adapter, IPAddress localIP, FastDL.DB.DBDownload dbd, FastDL.Data.DataManager dm)
         {
             _bgw = bgw;
             _dbd = dbd;
-            _form = f;
+            _dm = dm;
             _buffer = new byte[BUFFER_SIZE + 1];
             _localIP = new IPEndPoint(localIP, 0);
             FastDL.DB.DBChunk dbc = _dbm.getNext(dbd);
@@ -76,15 +76,12 @@ namespace FastDL.DL
                 if (response.ContentLength == dbc.end_byte - dbc.start_byte + 1)
                 {
                     good = true;
-                    //MsgBox("TRUE" & response.CharacterSet())
                 }
                 else
                 {
                     MessageBox.Show("Erreur");
                 }
             }
-
-
             _stream = response.GetResponseStream();
             _stream.BeginRead(_buffer, 0, READ_SIZE, callB, dbc);
 
@@ -116,11 +113,9 @@ namespace FastDL.DL
             }
             else
             {
-                lock (fileLock)
-                {
-                    fs.Seek(current.current_byte, SeekOrigin.Begin);
-                    fs.Write(_buffer, 0, read);
-                }
+                // écriture des données reçus
+                _dm.add(current.current_byte, _buffer, read);
+
                 current.current_byte += read;
                 _bgw.ReportProgress(0, new object[] {read, current, _dbd});
                 _stream.BeginRead(_buffer, 0, READ_SIZE, callB, current);

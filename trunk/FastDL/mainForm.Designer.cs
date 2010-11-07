@@ -46,11 +46,15 @@
             this.Adapter = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Speed = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Percent = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.lblDlState = new System.Windows.Forms.Label();
+            this.tcMain = new System.Windows.Forms.TabControl();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
             ((System.ComponentModel.ISupportInitialize)(this.nudBlockSize)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudConnPerInterfaces)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvThread)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbProgressBlock)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvInterfaces)).BeginInit();
+            this.tcMain.SuspendLayout();
             this.SuspendLayout();
             // 
             // nudBlockSize
@@ -89,7 +93,7 @@
             this.bytesdownloaded,
             this.percentblock,
             this.part});
-            this.dgvThread.Location = new System.Drawing.Point(13, 160);
+            this.dgvThread.Location = new System.Drawing.Point(42, 161);
             this.dgvThread.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.dgvThread.Name = "dgvThread";
             this.dgvThread.ReadOnly = true;
@@ -166,9 +170,10 @@
             // lblSpeed
             // 
             this.lblSpeed.AutoSize = true;
-            this.lblSpeed.Location = new System.Drawing.Point(12, 80);
+            this.lblSpeed.Font = new System.Drawing.Font("Calibri", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblSpeed.Location = new System.Drawing.Point(12, 73);
             this.lblSpeed.Name = "lblSpeed";
-            this.lblSpeed.Size = new System.Drawing.Size(60, 15);
+            this.lblSpeed.Size = new System.Drawing.Size(86, 23);
             this.lblSpeed.TabIndex = 7;
             this.lblSpeed.Text = "0 Ko / sec";
             // 
@@ -183,7 +188,7 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(555, 228);
+            this.button2.Location = new System.Drawing.Point(687, 416);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 41);
             this.button2.TabIndex = 9;
@@ -227,11 +232,41 @@
             this.Percent.Name = "Percent";
             this.Percent.ReadOnly = true;
             // 
+            // lblDlState
+            // 
+            this.lblDlState.AutoSize = true;
+            this.lblDlState.Location = new System.Drawing.Point(16, 140);
+            this.lblDlState.Name = "lblDlState";
+            this.lblDlState.Size = new System.Drawing.Size(0, 15);
+            this.lblDlState.TabIndex = 11;
+            // 
+            // tcMain
+            // 
+            this.tcMain.Controls.Add(this.tabPage1);
+            this.tcMain.Location = new System.Drawing.Point(522, 190);
+            this.tcMain.Name = "tcMain";
+            this.tcMain.SelectedIndex = 0;
+            this.tcMain.Size = new System.Drawing.Size(99, 34);
+            this.tcMain.TabIndex = 12;
+            // 
+            // tabPage1
+            // 
+            this.tabPage1.Location = new System.Drawing.Point(4, 24);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(91, 6);
+            this.tabPage1.TabIndex = 0;
+            this.tabPage1.Text = "Téléchargements";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
             // mainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(774, 469);
+            this.Controls.Add(this.dgvThread);
+            this.Controls.Add(this.tcMain);
+            this.Controls.Add(this.lblDlState);
             this.Controls.Add(this.dgvInterfaces);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.pbProgressBlock);
@@ -240,19 +275,19 @@
             this.Controls.Add(this.rtbURL);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.lblBlockSize);
-            this.Controls.Add(this.dgvThread);
             this.Controls.Add(this.nudConnPerInterfaces);
             this.Controls.Add(this.nudBlockSize);
             this.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.Name = "mainForm";
-            this.Text = "FastDL version PoC";
+            this.Text = "FastDL version poc";
             this.Load += new System.EventHandler(this.mainForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.nudBlockSize)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudConnPerInterfaces)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvThread)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbProgressBlock)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvInterfaces)).EndInit();
+            this.tcMain.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -278,6 +313,9 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Adapter;
         private System.Windows.Forms.DataGridViewTextBoxColumn Speed;
         private System.Windows.Forms.DataGridViewTextBoxColumn Percent;
+        private System.Windows.Forms.Label lblDlState;
+        private System.Windows.Forms.TabControl tcMain;
+        private System.Windows.Forms.TabPage tabPage1;
     }
 }
 

@@ -146,6 +146,16 @@ namespace FastDL.DB
             }
         }
 
+        public void endDownload(int down_id)
+        {
+            using (SqlCeCommand com = new SqlCeCommand("UPDATE download SET end_date=@end_date WHERE id=@id", _handler))
+            {
+                com.Parameters.AddWithValue("@end_date", DateTime.Now);
+                com.Parameters.AddWithValue("@id", down_id);
+                com.ExecuteNonQuery();
+            }
+        }
+
         public void deleteAllDownloads()
         {
             using (SqlCeCommand com = new SqlCeCommand("DELETE FROM download", _handler))

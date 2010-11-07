@@ -59,6 +59,7 @@
     <Compile Include="DB\DBDownload.cs" />
     <Compile Include="DB\DBManager.cs" />
     <Compile Include="DL\Downloader.cs" />
+    <Compile Include="DL\DownloadInformationWorker.cs" />
     <Compile Include="DL\DownloadManager.cs" />
     <Compile Include="DL\URLManager.cs" />
     <Compile Include="mainForm.cs">

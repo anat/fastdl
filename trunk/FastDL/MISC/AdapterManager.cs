@@ -65,7 +65,7 @@ namespace FastDL.MISC
         public bool checkAvailability(IPAddress adapter)
         {
             Pinger pg = new Pinger();
-            return pg.ping(adapter, 300);
+            return pg.ping(adapter, 500);
         }
 
 
