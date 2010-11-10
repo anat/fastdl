@@ -71,6 +71,8 @@
     <Compile Include="MISC\AdapterManager.cs" />
     <Compile Include="MISC\Header.cs" />
     <Compile Include="MISC\Pinger.cs" />
+    <Compile Include="MISC\Search.cs" />
+    <Compile Include="MISC\SearchResult.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="mainForm.resx">
