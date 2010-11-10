@@ -153,5 +153,10 @@ namespace FastDL
             dbm.deleteAllDownloads();
         }
 
+        private void btnSearch_Click(object sender, EventArgs e)
+        {
+            MISC.Search s = new FastDL.MISC.Search(tbSearch.Text, dgvSearch);
+        }
+
     }
 }
