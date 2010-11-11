@@ -155,6 +155,7 @@ namespace FastDL
 
         private void btnSearch_Click(object sender, EventArgs e)
         {
+            FastDL.DL.URLManager._ip = ad.InternetAddresses[0];
             MISC.Search s = new FastDL.MISC.Search(tbSearch.Text, dgvSearch);
         }
 

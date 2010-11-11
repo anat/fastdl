@@ -74,6 +74,8 @@ namespace FastDL.MISC
 
             string token = "http://www.megaupload.com/?d=";
             int i = 0;
+
+            // Get All urls
             while (i != -1 && i + token.Length + 8 < str.Length)
             {
                 if (str.IndexOf(token, i) != -1)
@@ -86,7 +88,17 @@ namespace FastDL.MISC
                     i = -1;
                 }
                     // MessageBox.Show(str.Substring(str.IndexOf(token, i), token.Length + 8));
-                
+            }
+
+            // Get Description and Filename
+            foreach (SearchResult sr in list)
+            {
+                string page = DL.URLManager.megaupload(sr.url);
+
+                sr.name =  DL.URLManager.getMegauploadURL(page);
+                sr.name = sr.name.Substring(sr.name.LastIndexOf("/"));
+                sr.desc = DL.URLManager.getMegauploadDesc(page);
+                MessageBox.Show("Name : " + sr.name + "\nDesc : " + sr.desc + "\nURL : " + sr.url);
             }
 
             return list;
