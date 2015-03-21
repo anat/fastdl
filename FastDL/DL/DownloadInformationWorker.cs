@@ -61,9 +61,7 @@ namespace FastDL.DL
                 // Mise à jour de la vraie taille
                 dbd.size = _header.size;
                 // Mise à jour du vrai nom
-                dbd.name = dbd.url.Substring(dbd.url.LastIndexOf("/") + 1);
-
-
+                dbd.name = Uri.UnescapeDataString(dbd.url.Substring(dbd.url.LastIndexOf("/") + 1));
                 //MessageBox.Show("ICI");
 
                 // Récupération des URL supplémentaires sans prendre en compte l'ip 0

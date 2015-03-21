@@ -1,0 +1,149 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="FastDL.Data.Data" Collapsed="true">
+    <Position X="2.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAACAAAAAAAAACAAAAAAgAAAAAAAAABAAAAAAAA=</HashCode>
+      <FileName>Data\Data.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FastDL.Data.DataManager" Collapsed="true">
+    <Position X="4" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAIQEAAAAAAAAAAAAAAAAIQIAAECAAA=</HashCode>
+      <FileName>Data\DataManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FastDL.DB.DBChunk" Collapsed="true">
+    <Position X="5.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAACAAAAAAIQAAAAABACAAAAAAAAAAAAAAAAAACAAiA=</HashCode>
+      <FileName>DB\DBChunk.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FastDL.DB.DBDownload" Collapsed="true">
+    <Position X="7.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAAQAAABAAAAAAKACAAAAAAAMAAAAAAAAAAAAAgA=</HashCode>
+      <FileName>DB\DBDownload.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FastDL.DB.DBManager" Collapsed="true">
+    <Position X="0.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIAIAAAAKCAggAAAEAAAAAAAAAAAAIAQACAAAAAAA=</HashCode>
+      <FileName>DB\DBManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FastDL.DL.Downloader" Collapsed="true">
+    <Position X="2.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAgAAAAAAAAAAEIEAgAGBAAEAABAIABAAAAgBA=</HashCode>
+      <FileName>DL\Downloader.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FastDL.DL.DownloadInformationWorker" Collapsed="true">
+    <Position X="4" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAAAAAAEAAAAAAkAAAQAAAAAAAIAABAAAAAAA=</HashCode>
+      <FileName>DL\DownloadInformationWorker.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FastDL.DL.DownloadManager" Collapsed="true">
+    <Position X="5.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAgIEQAAAQAAoAgAAEAAAAAAAAGAAAMAAAAAAABBA=</HashCode>
+      <FileName>DL\DownloadManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FastDL.DL.URLManager" Collapsed="true">
+    <Position X="7.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAAAAAAAgAAABAAAAgABAAAAAAAAAAAAAAAiA=</HashCode>
+      <FileName>DL\URLManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FastDL.mainForm" Collapsed="true">
+    <Position X="2.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQBgGAAAiAgYHAiAISgAAACABEcARAgAGAAQAhCFAM=</HashCode>
+      <FileName>mainForm.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FastDL.Program" Collapsed="true">
+    <Position X="5.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAA=</HashCode>
+      <FileName>Program.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FastDL.StatsManager" Collapsed="true">
+    <Position X="5.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgSAAAAAAAIAACAIAAAAgCAAAABAAAEAAACAQAAEBIA=</HashCode>
+      <FileName>Stats\StatsManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FastDL.MISC.AdapterManager" Collapsed="true">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAwAAAAAAAACAAgAAAAAAAAAAACAAAAIAAAAAAAA=</HashCode>
+      <FileName>MISC\AdapterManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FastDL.MISC.Header" Collapsed="true">
+    <Position X="0.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAQAAAAAAAAAAIAAAAAAAAQAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MISC\Header.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FastDL.MISC.Pinger" Collapsed="true">
+    <Position X="4" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAAAAAAAAEAAAAAABAAAEAAAAAAAAAQAAAAAA=</HashCode>
+      <FileName>MISC\Pinger.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FastDL.MISC.Search" Collapsed="true">
+    <Position X="0.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAAAAAAAAAIABAAKAEAAAAAAAAAAAABAAAgAAAA=</HashCode>
+      <FileName>MISC\Search.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FastDL.MISC.SearchResult" Collapsed="true">
+    <Position X="2.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAMAABAAAAAAAAAAAA=</HashCode>
+      <FileName>MISC\SearchResult.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FastDL.MISC.Utils" Collapsed="true">
+    <Position X="0.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MISC\Utils.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FastDL.Properties.Resources" Collapsed="true">
+    <Position X="7.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAAAAAAAAAAABEAAAAQAAAAAAAAAAAAAAAIA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FastDL.Properties.Settings" Collapsed="true">
+    <Position X="4" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAIAAAAAABAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FastDL.Stats.FileMap" Collapsed="true">
+    <Position X="7.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAEAAA=</HashCode>
+      <FileName>Stats\FileMap.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

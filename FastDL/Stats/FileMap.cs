@@ -32,14 +32,14 @@ namespace FastDL.Stats
             //g.FillRectangle(Brushes.Azure, New RectangleF(0, 0, stats.Width, stats.Height))
             foreach (FastDL.DB.DBChunk db in dbc)
             {
-                int x = 0;
-                int y = 0;
-                int width = 0;
-                int height = 0;
+                float x = 0;
+                float y = 0;
+                float width = 0;
+                float height = 0;
 
-                x = (int)getWidth(db.start_byte, db.dbd.size);
+                x = getWidth(db.start_byte, db.dbd.size);
                 y = 0;
-                width = (int)getWidth(db.current_byte - db.start_byte, db.dbd.size);
+                width = getWidth(db.current_byte - db.start_byte, db.dbd.size);
                 height = stats.Height;
 
                 RectangleF rec = new RectangleF(x, y, width, height);

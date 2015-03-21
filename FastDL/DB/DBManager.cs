@@ -88,7 +88,6 @@ namespace FastDL.DB
                 SqlCeDataReader dr = com.ExecuteReader();
                 if (dr.Read())
                 {
-                    // MsgBox(dr.Item("id"))
                     using (SqlCeCommand com2 = new SqlCeCommand("UPDATE chunk SET downloading = 1 WHERE id=@id", _handler))
                     {
                         com2.Parameters.AddWithValue("@id", Convert.ToInt32(dr.GetInt32(0)));
@@ -125,6 +124,60 @@ namespace FastDL.DB
 
             return chunk;
         }
+
+        public List<DBDownload> getAllDownloads()
+        {
+            List<DBDownload> downloads = new List<DBDownload>();
+            DBDownload download;
+                        DBChunk tmp;
+            List<DBChunk> chunks;
+
+            using (SqlCeCommand comdl = new SqlCeCommand("SELECT * FROM download ORDER BY start_date", _handler))
+            {
+                SqlCeDataReader drd = comdl.ExecuteReader();
+                while (drd.Read())
+                {
+                    download = new DBDownload();
+                    download.id = (int)(drd.GetSqlInt32(0));
+                    download.url = (string)(drd.GetSqlString(1));
+                    download.name = (string)(drd.GetSqlString(2));
+                    download.path = (string)(drd.GetSqlString(3));
+                    download.size = (long)(drd.GetSqlInt64(4));
+                    download.header = (string)(drd.GetSqlString(5));
+                    download.startDate = (DateTime)(drd.GetSqlDateTime(6));
+                    download.endDate = (DateTime)(drd.GetSqlDateTime(7));
+
+                    chunks = new List<DBChunk>();
+
+                    using (SqlCeCommand comch = new SqlCeCommand("SELECT * FROM chunk WHERE down_id = " + download.id + " ORDER BY start_byte", _handler))
+                    {
+                        SqlCeDataReader dr = comch.ExecuteReader();
+                        while (dr.Read())
+                        {
+                            tmp = new DBChunk();
+                            tmp.id = (int)(dr.GetSqlInt32(0));
+                            tmp.down_id = (int)(dr.GetSqlInt32(1));
+                            tmp.start_byte = (long)(dr.GetSqlInt64(2));
+                            tmp.end_byte = (long)(dr.GetSqlInt64(3));
+
+                  
+                            if (dr.IsDBNull(4))
+                                tmp.downloading = 0;
+                            else
+                            tmp.downloading = (int)(dr.GetByte(4));
+                            if (dr.IsDBNull(5))
+                                tmp.owned = 0;
+                            else
+                                tmp.owned = (int)(dr.GetByte(5));
+                        }
+                    }
+                    download.chunks = chunks;
+                    downloads.Add(download);
+                }
+            }
+            return downloads;
+        }
+
 
         public void setDownloadingState(int chunk_id, bool state)
         {

@@ -6,6 +6,9 @@ using System.Windows.Forms;
 using System.ComponentModel;
 using System.Net;
 using System.IO;
+using System.Text.RegularExpressions;
+
+
 namespace FastDL.MISC
 {
     public class Search
@@ -43,7 +46,8 @@ namespace FastDL.MISC
         {
             List<SearchResult> list = new List<SearchResult>();
 
-            list.AddRange(Megaupload());
+            //list.AddRange(Megaupload());
+            list.AddRange(downloadsnl());
             return list;
         }
 
@@ -102,6 +106,31 @@ namespace FastDL.MISC
             }
 
             return list;
+        }
+
+
+        private List<SearchResult> downloadsnl()
+        {
+            string url = "http://www.downloads.nl/results/mp3/1/" + _words.Replace(" ", "+");
+
+
+            string page = Utils.getPage(url);
+            string token = "class=\"tl j-lnk\" href=\"";
+
+            string reg = "((" + token + ")[.*](\"))+";
+
+            Regex r = new Regex(reg);
+            MatchCollection matches = r.Matches(page);
+            foreach(Match m in matches)
+            {
+                MessageBox.Show(m.Groups[0].Value);
+            }
+            string[] result = r.Split(page);
+            foreach (string s in result)
+            {
+                MessageBox.Show(s);
+            }
+            return new List<SearchResult>();
         }
     }
 }

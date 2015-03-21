@@ -15,11 +15,6 @@ using System.Windows.Forms;
 namespace FastDL.DL
 {
 
-
-    // Gestionnaire des téléchargeurs "Downloader"
-    // fichier le plus commenté pour le moment
-    
-
     public class DownloadManager
     {
         public FastDL.DB.DBManager dbm;
@@ -34,29 +29,29 @@ namespace FastDL.DL
         private int _nbConnPerInterface;
         public Stopwatch timer;
         private DownloadInformationWorker _diw;
-
+        private StatsManager stats;
 
         public DownloadManager(mainForm form, List<System.Net.NetworkInformation.NetworkInterface> adapters, List<IPAddress> IPs, int BlockSize, int nbConnPerInterface)
         {
+            _form = form;
             _blockSize = BlockSize * 1048576;
             _nbConnPerInterface = nbConnPerInterface;
-            _form = form;
             _ips = IPs;
             _adapters = adapters;
             dbm = new FastDL.DB.DBManager();
-
         }
 
 
         public void addDownload(string url)
         {
-
             if (dbm.exists(url))
             {
                 MessageBox.Show("Already added");
             }
             else
             {
+                stats = new StatsManager(_form, url);
+                
                 // Création du DBDownload (asynchrone)
                 _diw = new DownloadInformationWorker(url, _ips, this);
                 // La méthode startDownload est ensuite appelée automatiquement
@@ -85,7 +80,7 @@ namespace FastDL.DL
 
                     bgw.DoWork += DoDownload;
                     bgw.RunWorkerCompleted += EndDownload;
-                    bgw.ProgressChanged += _form.maj2;
+                    bgw.ProgressChanged += stats.update;
 
                     dlers.Add(bgw);
                     bgw.RunWorkerAsync(new object[] { _adapters[_ips.IndexOf(ip)], ip, dbd });
@@ -115,7 +110,8 @@ namespace FastDL.DL
             if (dlers.Count() == 0)
             {
                 dbm.endDownload(((DB.DBDownload)(e.Result)).id);
-                _dm.close();
+                // end of write
+                _dm.push(new Data.Data());
                 MessageBox.Show("Téléchargé en " + timer.Elapsed.Seconds + " secondes.");
             }
 
@@ -126,10 +122,9 @@ namespace FastDL.DL
             Int64 remain = Convert.ToInt64(dbd.size % _blockSize);
             Int64 nbAdd = Convert.ToInt64(dbd.size / _blockSize);
             for (Int32 i = 0; i <= Convert.ToInt32(dbd.size - remain - 1); i += Convert.ToInt32(_blockSize))
-            {
                 dbm.addChunk(dbd.id, i, Convert.ToInt64(i + _blockSize - 1));
-            }
-            dbm.addChunk(dbd.id, dbd.size - remain, dbd.size - 1);
+            if (remain != 0)
+                dbm.addChunk(dbd.id, dbd.size - remain, dbd.size - 1);
         }
 
 

@@ -59,5 +59,12 @@ namespace FastDL.Properties {
                 resourceCulture = value;
             }
         }
+        
+        internal static System.Drawing.Bitmap Network_Internet {
+            get {
+                object obj = ResourceManager.GetObject("Network_Internet", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
     }
 }

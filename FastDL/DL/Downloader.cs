@@ -22,8 +22,8 @@ namespace FastDL.DL
     {
         //Ce FileStream est le mal il nous faut un DataManager
         public static FileStream fs;
-        private const int BUFFER_SIZE = 400000;
-        private const int READ_SIZE = 350000;
+        public static int BUFFER_SIZE = 400000;
+        public static int READ_SIZE = 350000;
         private byte[] _buffer;
         private FastDL.DB.DBManager _dbm = new FastDL.DB.DBManager();
         private Stream _stream;
@@ -57,6 +57,7 @@ namespace FastDL.DL
                 _dbm.setOwnedState(dbc.id, true);
                 dbc = _dbm.getNext(dbd);
             }
+            
         }
 
 
@@ -66,7 +67,7 @@ namespace FastDL.DL
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
             request.AddRange(Convert.ToInt32(dbc.start_byte), Convert.ToInt32(dbc.end_byte));
             request.CookieContainer = new CookieContainer();
-            request.CookieContainer.Add(URLManager.GetCredential("mamare1", "17111981"));
+            request.CookieContainer.Add(URLManager.GetCredential("screamounet", "xv1zzi2o"));
             request.ServicePoint.BindIPEndPointDelegate = new BindIPEndPoint(BindIPEndPointCallback);
             bool good = false;
             HttpWebResponse response = null;
@@ -74,21 +75,15 @@ namespace FastDL.DL
             {
                 response = (HttpWebResponse)request.GetResponse();
                 if (response.ContentLength == dbc.end_byte - dbc.start_byte + 1)
-                {
                     good = true;
-                }
                 else
-                {
                     MessageBox.Show("Erreur");
-                }
             }
             _stream = response.GetResponseStream();
             _stream.BeginRead(_buffer, 0, READ_SIZE, callB, dbc);
 
             while (_eos == false)
-            {
                 System.Threading.Thread.Sleep(10);
-            }
             _eos = false;
         }
 
@@ -104,20 +99,19 @@ namespace FastDL.DL
                     MessageBox.Show("Partie mal téléchargé\\ncur:" + current.current_byte + Constants.vbNewLine + "end:" + current.end_byte);
                 }
                 else
-                {
                     Downloaded = true;
-                }
                 _stream.Close();
                 _eos = true;
-
             }
             else
             {
-                // écriture des données reçus
-                _dm.add(current.current_byte, _buffer, read);
+                // écriture asynchrone des données reçus
+                _dm.push(new Data.Data(current.current_byte, ref _buffer, read));
 
                 current.current_byte += read;
                 _bgw.ReportProgress(0, new object[] {read, current, _dbd});
+
+                _buffer = new byte[BUFFER_SIZE + 1];
                 _stream.BeginRead(_buffer, 0, READ_SIZE, callB, current);
             }
         }

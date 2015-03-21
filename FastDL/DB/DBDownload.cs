@@ -15,6 +15,7 @@ namespace FastDL.DB
         public string header;
         public System.DateTime startDate;
         public System.DateTime endDate;
+        public List<DBChunk> chunks;
     }
 
 }

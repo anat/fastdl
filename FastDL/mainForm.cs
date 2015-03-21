@@ -16,130 +16,37 @@ namespace FastDL
 {
     public partial class mainForm : Form
     {
-        Stopwatch sw = null;
-        private int DownloadedInASecond;
-        private int totalReceived;
-        private FastDL.Stats.FileMap filemap = new FastDL.Stats.FileMap();
         private FastDL.DL.DownloadManager dlm;
-        List<FastDL.DB.DBChunk> coord = new List<FastDL.DB.DBChunk>();
         private FastDL.MISC.AdapterManager ad = new FastDL.MISC.AdapterManager();
-        //public DataGridView dgvThread;
+
         public mainForm()
         {
             InitializeComponent();
-            //rtbURL.Text = "http://www.megaupload.com/?d=Y182D810";
-            rtbURL.Text = "http://ovh.dl.sourceforge.net/project/vlc/1.1.4/win32/vlc-1.1.4-win32.exe";
+            ServicePointManager.DefaultConnectionLimit = 100;
+            rtbURL.Text = "http://d212.uploadstation.com/file/es8mKk8/X-vFBnjzOauZ7tR7ZYQJqxeV-0FWi-LPCWBTd_1hg2LPpDVd21UJ1ttXgwu_yzCJvzR-mdKc-CZya8fRtxbx1jx7-IObMSOiL5rF8M1zHhLLov5Nx-RDSgWZK11dxONWSYAXxS83Yva28jwStAz0yNyM4PZciKO9umzC-4M6LAA./Trackmania.2.rar";
         }
 
         private void mainForm_Load(object sender, EventArgs e)
         {
-            //dgvThread = new DataGridView();
-            //this.dgvThread.AllowUserToAddRows = false;
-            //this.dgvThread.AllowUserToDeleteRows = false;
-            //this.dgvThread.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            //this.dgvThread.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            //this.nthread,
-            //this.bytesdownloaded,
-            //this.percentblock,
-            //this.part});
-            //this.dgvThread.Location = new System.Drawing.Point(261, 137);
-            //this.dgvThread.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            //this.dgvThread.Name = "dgvThread";
-            //this.dgvThread.ReadOnly = true;
-            //this.dgvThread.RowHeadersVisible = false;
-            //this.dgvThread.Size = new System.Drawing.Size(425, 172);
-            //this.dgvThread.TabIndex = 2;
-            //TabPage tp1test = new TabPage("Download");
-            //tp1test.Size = tcMain.Size;
-            //tp1test.ImageIndex = 1;
-            //tcMain.Controls.Add(tp1test);
-
-            ServicePointManager.DefaultConnectionLimit = 100;
-            pbProgressBlock.Image = filemap.stats;
+            tcMain.SelectedTab = tpDownloads;
             ad.setIPUp();
-            foreach (NetworkInterface ni in ad.InternetIntefaces)
+            lblNbInterfaces.Text = ad.InternetAddresses.Count().ToString();
+            DB.DBManager dbm = new DB.DBManager();
+            foreach (DB.DBDownload dl in dbm.getAllDownloads())
             {
-                dgvInterfaces.Rows.Add(ni.Description, ni.Speed.ToString());
-            }
-        }
-
-        public void maj2(object sender, ProgressChangedEventArgs recv)
-        {
-            int received = (int)(((object[])recv.UserState)[0]);
-            FastDL.DB.DBChunk dbc = (FastDL.DB.DBChunk)((object[])recv.UserState)[1];
-            FastDL.DB.DBDownload dbd = (FastDL.DB.DBDownload)((object[])(recv.UserState))[2];
-            int percent = 100 - (((int)dbc.end_byte - (int)dbc.current_byte) * 100) / ((int)dbc.end_byte - (int)dbc.start_byte);
-
-            BackgroundWorker bgw = (BackgroundWorker)sender;
-            bool exists = false;
-
-            
-
-            foreach (DataGridViewRow row in dgvThread.Rows)
-            {
-                if (((int)row.Cells["nthread"].Value == bgw.GetHashCode()))
+                if (dl.endDate != null)
                 {
-                    exists = true;
-                    //row.Cells["bytesdownloaded"].Value += received;
-                    row.Cells["percentblock"].Value = percent;
-                    if (row.Cells["part"].Value.ToString() != (dbc.start_byte.ToString() + " " + dbc.end_byte.ToString()))
-                    {
-                        row.Cells["part"].Value = dbc.start_byte.ToString() + " " + dbc.end_byte.ToString();
-                    }
-                }
-            }
-            if (!exists)
-            {
-                dgvThread.Rows.Add(bgw.GetHashCode(), 0 + received, percent, dbc.start_byte.ToString() + " " + dbc.end_byte.ToString());
-            }
-
-
-
-            dbc.dbd = dbd;
-            if ((sw == null))
-            {
-                sw = new Stopwatch();
-                sw.Start();
-                DownloadedInASecond = 0;
-            }
-            else
-            {
-                if (sw.Elapsed.Seconds >= 1)
-                {
-                    long fromStart = Microsoft.VisualBasic.DateAndTime.DateDiff(DateInterval.Second, dbd.startDate, DateTime.Now, FirstDayOfWeek.Monday,FirstWeekOfYear.Jan1);
-                    //?
-                    long current = totalReceived;
-                    long total = dbd.size;
-
-
-                    string leftMinutes = Math.Round((decimal)(((Convert.ToInt64(fromStart) * Convert.ToInt64(total)) / current) / 60)).ToString();
-                    lblSpeed.Text = Math.Round((decimal)(DownloadedInASecond / 1024), 1).ToString() + " Ko/sec  Restant : " + leftMinutes;
-                    DownloadedInASecond = 0;
-                    sw = new Stopwatch();
-                    sw.Start();
-                    //filemap.update(coord)
-                    //coord = New List(Of DBChunk)
-                    //PictureBox1.Image = filemap.stats
+                    dgvDownloads.Rows.Add(dl.name, null, dl.size, "", "Finished");
                 }
                 else
                 {
-                    DownloadedInASecond += received;
+                    dgvDownloads.Rows.Add(dl.name, null, dl.size,"", "");
                 }
+
             }
-            totalReceived += received;
-            //For Each dgvr As DataGridViewRow In DataGridView2.Rows
-            //    If (dgvr.Cells("Adapter").Value = dbc.adapter.Description) Then
-            //        dgvr.Cells("Speed").Value = (totalReceived / 1024 / 1024)  '(adapter.GetIPv4Statistics.BytesReceived / 1024 / 1024).ToString() & " Mo"
-            //        dgvr.Cells("Percent").Value = percent
-            //    End If
-            //Next
-            coord.Add(dbc);
-            filemap.update(coord);
-            coord = new List<FastDL.DB.DBChunk>();
-            pbProgressBlock.Image = filemap.stats;
-            //DataGridView2.Rows(0).Cells("Speed").Value = recv.NetworkInterface.GetIPv4Statistics.BytesReceived
-            lblDlState.Text = (totalReceived / 1024 / 1024).ToString() + "/" + (dbc.dbd.size / 1024 / 1024).ToString();
         }
+
+        
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -158,6 +65,19 @@ namespace FastDL
             FastDL.DL.URLManager._ip = ad.InternetAddresses[0];
             MISC.Search s = new FastDL.MISC.Search(tbSearch.Text, dgvSearch);
         }
+
+
+
+        private void linkGrabber(object sender, EventArgs e)
+        {
+            MessageBox.Show("Has focus");
+        }
+
+
+        //override protected void OnGotFocus(object sender, EventArgs e)
+        //{
+        //    MessageBox.Show("Has focus2");
+        //}
 
     }
 }
