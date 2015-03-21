@@ -45,8 +45,6 @@ namespace FastDL.MISC
         private List<SearchResult> getResults()
         {
             List<SearchResult> list = new List<SearchResult>();
-
-            //list.AddRange(Megaupload());
             list.AddRange(downloadsnl());
             return list;
         }
