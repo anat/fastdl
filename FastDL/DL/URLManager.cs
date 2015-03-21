@@ -27,97 +27,12 @@ namespace FastDL.DL
         public static string getURL(FastDL.DB.DBDownload dbd, IPAddress ip)
         {
             _ip = ip;
-            if (dbd.url.Contains("http://www.megaupload.com/?d="))
-            {
-                return getMegauploadURL(megaupload(dbd.url));
-            }
+            //if (dbd.url.Contains("http://www.website.com/"))
+            //{
+            //    return this.websiteAuth();
+            //}
             return dbd.url;
         }
-
-
-
-        public static string megaupload(String url)
-        {
-            CookieCollection theCookie = GetCredential("mamare1", "17111981");
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-            request.CookieContainer = new CookieContainer();
-            request.CookieContainer.Add(theCookie);
-            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-            Stream s = response.GetResponseStream();
-            byte[] buff = new byte[50001];
-            string str = "";
-            int read = 1;
-            while (read != 0)
-            {
-                read = s.Read(buff, 0, 5000);
-                str += ASCIIEncoding.ASCII.GetString(buff, 0, read);
-            }
-            return str;
-        }
-
-
-        public static string getMegauploadURL(string page)
-        {
-            int start = page.IndexOf("<div style=\"position:absolute; left:727px; top:40px; \" id=\"downloadlink\">");
-            start = page.IndexOf("<a href=\"", start) + 9;
-            int done = page.IndexOf("\"", start);
-            return (start== -1 || done == -1 ? "":page.Substring(start, done - start));
-        }
-
-        public static string getMegauploadDesc(string page)
-        {
-            string token = "<font style=\"font-family:arial; color:#FF6700; font-size:18px; font-weight:bold;\">";
-            int start = page.IndexOf(token);
-            start += token.Length;
-            int done = page.IndexOf("<", start);
-            return (start == -1 || done == -1 ? "" : page.Substring(start, done - start));
-        }
-
-
-
-
-
-        public static CookieCollection GetCredential(string login, string password)
-        {
-            if (File.Exists(_ip.ToString() + "megaupload.bin"))
-            {
-                BinaryFormatter bf = new BinaryFormatter();
-                using (FileStream fs = new FileStream(_ip.ToString() + "megaupload.bin", FileMode.Open))
-                {
-                    return (CookieCollection)bf.Deserialize(fs);
-                }
-            }
-            else
-            {
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://megaupload.com/?c=login");
-                byte[] data = ASCIIEncoding.ASCII.GetBytes("login=1&redir=0&username=" + login + "&password=" + password);
-                request.ServicePoint.BindIPEndPointDelegate = new BindIPEndPoint(BindIPEndPointCallback);
-                request.Method = "POST";
-                request.ContentType = "application/x-www-form-urlencoded";
-                request.ContentLength = data.Length;
-                request.CookieContainer = new CookieContainer();
-                Stream s = request.GetRequestStream();
-                s.Write(data, 0, data.Length);
-                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-                if (response.Headers["Set-Cookie"] == null)
-                {
-                    MessageBox.Show("Couldn't login with your megaupload account");
-                }
-                else
-                {
-                    BinaryFormatter bf = new BinaryFormatter();
-                    using (FileStream fs = new FileStream(_ip.ToString() + "megaupload.bin", FileMode.OpenOrCreate))
-                    {
-                        bf.Serialize(fs, response.Cookies);
-                    }
-                    return response.Cookies;
-                }
-            }
-            return null;
-        }
-
-
-
 
 
         public static IPEndPoint BindIPEndPointCallback(ServicePoint servicePoint, IPEndPoint remoteEndPoint, int retryCount)
